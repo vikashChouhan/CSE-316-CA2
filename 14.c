@@ -98,10 +98,11 @@ void increase_flag(struct process_info processes[], int len, int running_process
 	}
 }
 
-void check_completed(struct process_info processes[], int len){
+void check_completed(struct process_info processes[], int len)
+{
 	for (int i = 0; i < len; i++)
 	{
-		if (processes[i].burst_time == 0  && processes[i].completed != 1)
+		if (processes[i].burst_time == 0 && processes[i].completed != 1)
 		{
 			processes[i].completed = 1;
 		}
@@ -117,7 +118,7 @@ int main()
 
 	struct process_info p_info[10];
 
-	// printf("Enter Number of Process:");
+	printf("Enter Number of Process:");
 	scanf("%d", &number_of_process);
 
 	if (number_of_process > 10)
@@ -141,12 +142,22 @@ int main()
 		p_info[i].flag = 0;
 		p_info[i].completed = 0;
 	}
+	int gantt_chart[100];
+	// int inserter = 0;
+	int waiting_time[11];
+	// int turn_around_time[11];
+	int number_of_premptions[11];
+	int local_burst_time[11] = {0};
+	int local_arrival_time[11] = {0};
+	int turn_around_time[11] = {0};
 
 	for (int a = 0; a < total_cpu_time; a++)
 	{
 
 		sort_by_priority(p_info, number_of_process, a);
 		p_info[0].burst_time -= 1;
+		printf("%d ", p_info[0].process_number); // printing gantt chart
+		gantt_chart[a] = p_info[0].process_number;
 		increase_flag(p_info, number_of_process, p_info[0].process_number, a);
 		increase_priority(p_info, number_of_process, a);
 		check_completed(p_info, number_of_process);
@@ -154,6 +165,98 @@ int main()
 
 	for (int i = 0; i < number_of_process; i++)
 	{
-		printf("%d\n", p_info[i].process_number);
+		local_arrival_time[p_info[i].process_number] = p_info[i].arrival_time;
 	}
+
+	for (int i = 0; i < total_cpu_time; i++)
+	{
+		local_burst_time[gantt_chart[i]]++;
+	}
+
+	for (int i = 1; i <= number_of_process; i++)
+	{
+		int counter = 0;
+		waiting_time[i] = 0;
+		turn_around_time[i] = 0;
+		number_of_premptions[i] = 0;
+		for (int j = 0; j < total_cpu_time; j++)
+		{
+			if (gantt_chart[j] != i)
+			{
+				if (counter <= local_burst_time[i])
+				{
+					waiting_time[i]++;
+				}
+			}
+			else
+			{
+				counter++;
+			}
+			if (counter == local_burst_time[gantt_chart[j]])
+			{
+				break;
+			}
+		}
+	}
+
+	for (int i = 1; i <= number_of_process; i++)
+	{
+		int burst = 0;
+		int counter = 0;
+		for (int j = 0; j < total_cpu_time; j++)
+		{
+			if (gantt_chart[j] == i)
+			{
+				burst++;
+				counter = 1;
+			}
+			else
+			{
+				if (counter == 1 && burst != local_burst_time[i])
+				{
+					number_of_premptions[i]++;
+					counter = 0;
+				}
+			}
+			if (counter == local_burst_time[gantt_chart[j]])
+			{
+				break;
+			}
+		}
+	}
+
+	int total_waiting_time = 0;
+	int total_turn_around_time = 0;
+	printf("\n");
+	for (int i = 0; i < number_of_process; i++)
+	{
+		waiting_time[i + 1] -= local_arrival_time[i + 1];
+		turn_around_time[i + 1] = waiting_time[i + 1] + local_burst_time[i + 1];
+		total_waiting_time += waiting_time[i + 1];
+		total_turn_around_time += turn_around_time[i + 1];
+	}
+
+
+	printf("\n");
+	for (int i = 1; i <= number_of_process; i++)
+	{
+		waiting_time[i] += number_of_premptions[i] * 2;
+		turn_around_time[i] += number_of_premptions[i] * 2;
+		total_waiting_time += number_of_premptions[i] * 2;
+		total_turn_around_time += number_of_premptions[i] * 2;
+				// printf("%d ", waiting_time[i]);
+		// printf("%d ", number_of_premptions[i]);
+	}
+
+
+	double avg_waiting_time = total_waiting_time / (float)number_of_process;
+	double avg_turn_around_time = total_turn_around_time / (float)number_of_process;
+
+	printf("\nProcess_Number \t Waiting Time \t Turn Around Time");
+	for(int i = 1; i <= number_of_process; i++){
+		printf("\n%d \t\t %d \t\t %d", i, waiting_time[i], turn_around_time[i]);
+	}
+	printf("\n---------------------------");
+	printf("\nAverage waiting time: %f", avg_waiting_time);
+	printf("\nAverage turn around time: %f", avg_turn_around_time);
 }
