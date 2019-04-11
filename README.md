@@ -20,3 +20,5 @@ Question-21 Output
 
 
 ![alt text](https://github.com/agharshit08/CSE-316-CA2/blob/master/ss2.PNG "Question 21")
+
+![alt text](https://github.com/agharshit08/CSE-316-CA2/blob/master/ss3.jpeg "Question 21")
