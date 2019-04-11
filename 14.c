@@ -129,8 +129,6 @@ int total_cpu_time;	// Total burst time of all the processes.
 
 int main()
 {
-	freopen("in.txt", "r", stdin);
-
 	struct process_info p_info[10]; // Array of all the proceeses. For convention I have taken maximum number of processes as 10.
 
 	printf("Enter Number of Process:");
@@ -161,7 +159,7 @@ int main()
 	}
 	int gantt_chart[100]; // Array to calculate gantt chart of processes. Its size cis equal to total_cpu_time but I have assumed it to 100.
 
-	int waiting_time[11];				// Array which wil hold waiting time of processes.
+	int waiting_time[11];			  // Array which wil hold waiting time of processes.
 	int number_of_premptions[11];	 // Array to hold, how many times a particular process preempts.
 	int local_burst_time[11] = {0};   // Array to hold, burst time of all processes.
 	int local_arrival_time[11] = {0}; // Array to hold, arrival time of all processes.
