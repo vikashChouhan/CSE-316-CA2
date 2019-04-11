@@ -1,43 +1,43 @@
 #include <stdio.h>
 int main()
 {
-    int i;
-    int j;
-    int n;
-    int a[50];
-    int frame[10];
+
+    int n; // To store number of pages.
+    int page_number[50]; // Page numbers
+    int frame[10]; // Frames
     int no;
-    int k;
     int avail;
     int count = 0;
+    // Takin input
     printf("Enter the number of pages:\n");
     scanf("%d", &n);
-    printf("Enter page number:\n");
-    for (i = 1; i <= n; i++)
+    printf("Enter page number for %d pages:\n", n);
+    for (int i = 1; i <= n; i++)
     {
-        scanf("%d", &a[i]);
+        scanf("%d", &page_number[i]);
     }
     printf("Enter the number of frames:");
     scanf("%d", &no);
-    for (i = 0; i < no; i++)
+    // Initializing all frames to -1.
+    for (int i = 0; i < no; i++)
     {
         frame[i] = -1;
     }
-    j = 0;
+    int j = 0;
     printf("\tReference string\t Page Frames\n");
-    for (i = 1; i <= n; i++)
+    for (int i = 1; i <= n; i++)
     {
-        printf("%d\t\t", a[i]);
+        printf("%d\t\t", page_number[i]);
         avail = 0;
-        for (k = 0; k < no; k++)
-            if (frame[k] == a[i])
+        for (int  k = 0; k < no; k++)
+            if (frame[k] == page_number[i])
                 avail = 1;
         if (avail == 0)
         {
-            frame[j] = a[i];
+            frame[j] = page_number[i];
             j = (j + 1) % no;
             count++;
-            for (k = 0; k < no; k++){
+            for (int k = 0; k < no; k++){
                 printf("%d\t", frame[k]);
             }
         }
